@@ -26,19 +26,16 @@ fi
 
 log "creating virtual environment"
 
+sudo apt update > /dev/null 2>&1
+sudo apt install python3 python3-pip python3-venv -y > /dev/null 2>&1
+log "installing python3"
 
 
-if  ! command -v python3.12-venv
-then
-	sudo apt install python3.12-venv >/dev/null 2>&1
-	log "installing python3"
-fi
-
-
-python3 -m venv venv
+python3 -m venv venv > /dev/null 2>&1
 source venv/bin/activate
 
 log  "activating venv"
+
 
 
 
@@ -66,7 +63,7 @@ log " CONFIGURATION OF NGINX  AS A REVERSE PROXY"
 
 if ! command -v nginx  > /dev/null
 then
-	sudo apt install nginx -y
+	sudo apt install nginx -y > /dev/null 2>&1
 	log " nginx not found, now installing nginx"
 fi
 
@@ -77,9 +74,7 @@ log "start and enable nginx"
 
 sudo cp  flaskapi /etc/nginx/sites-available/flask
 sudo ln -s /etc/nginx/sites-available/flask /etc/nginx/sites-enabled/
-
-
-sudo rm /etc/nginx/sites-enabled/default
+sudo rm -f /etc/nginx/sites-enabled/default
 
 echo ""
 echo ""
