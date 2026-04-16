@@ -12,13 +12,13 @@ log(){
 
 
 log "check python version" python --version
-log "updating  apt packages" sudo apt update
+log "updating  apt packages" sudo apt update > /dev/null 2>&1
 
 
 if ! command -v python3 > /dev/null
 then
-	sudo apt install python3 python3-pip -y
-	log "installing python3"
+        sudo apt install python3 python3-pip -y > /dev/null 2>&1
+        log "installing python3"
 fi
 
 
@@ -34,8 +34,6 @@ log "installing python3"
 python3 -m venv venv > /dev/null 2>&1
 source venv/bin/activate
 
-log  "activating venv"
-
 
 
 
@@ -46,9 +44,10 @@ log "updating pip"
 echo ""
 echo ""
 
-pip install -r $RR  >/dev/null 2>&1 
+pip install -r $RR  >/dev/null 2>&1
 log "installing from requirements.txt"
 log "installing gunicorn"
+
 
 
 
@@ -63,8 +62,8 @@ log " CONFIGURATION OF NGINX  AS A REVERSE PROXY"
 
 if ! command -v nginx  > /dev/null
 then
-	sudo apt install nginx -y > /dev/null 2>&1
-	log " nginx not found, now installing nginx"
+        sudo apt install nginx -y > /dev/null 2>&1
+        log " nginx not found, now installing nginx"
 fi
 
 
@@ -80,9 +79,13 @@ echo ""
 echo ""
 echo "===================================================================="
 
+sudo systemctl start nginx && sudo systemctl enable nginx
+log "start and enable nginx"
+
+
+
 sudo nginx -t  >> $LOGFILE
-sudo nginx -s reload $LOGFILE
+sudo nginx -s reload >> $LOGFILE
 
 
 log "TESTING NGINX CONFIG"
- 
